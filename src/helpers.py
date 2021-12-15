@@ -1,13 +1,16 @@
+from typing import List, Dict
+
 import terra_sdk.client.lcd
 from src import const
 from src.params import Params
 from terra_sdk.client.lcd import LCDClient, Wallet
 from terra_sdk.key.raw import RawKey
 import os
+import base64
 
 
 def create_params() -> Params:
-    return Params("")
+    return Params()
 
 
 def create_terra() -> LCDClient:
@@ -23,9 +26,64 @@ def create_wallet(client: LCDClient) -> Wallet:
     return wallet
 
 
+def get_arg_safe(args: List[str], idx=0) -> str:
+    if not len(args):
+        warn("not enough arguments")
+        return ""
+    return args[idx]
+
+
+def to_uluna(luna: float) -> int:
+    return round(luna * 1000000)
+
+
+def from_uluna(uluna: int) -> float:
+    return uluna / 1000000.0
+
+
+def get_sell_msg(max_spread: float, belief_price: float) -> str:
+    jsn = '{"swap":{"max_spread":"{}","belief_price":"{}"}}'.format(max_spread, belief_price)
+    encoded = jsn.encode()
+    return str(base64.b64encode(encoded))
+
+
+def get_sell_dict(belief_price: float, params: Params) -> Dict:
+    msg = get_sell_msg(params.spread, belief_price)
+    amount = str(to_uluna(params.amount_bluna))
+    return {
+      "send": {
+        "amount": amount,
+        "contract": const.luna_bluna,
+        "msg": msg
+      }
+    }
+
+
+def get_buy_dict(belief_price: float, params: Params) -> Dict:
+    amount = str(to_uluna(params.amount_luna))
+    return {
+        "swap": {
+            "belief_price": str(belief_price),
+            "max_spread": str(params.spread),
+            "offer_asset": {
+                "amount": amount,
+                "info": {
+                    "native_token": {
+                        "denom": "uluna"
+                    }
+                }
+            }
+        }
+    }
+
+
 def get_pk() -> str:
     return os.getenv('PK')
 
 
 def info(s: str):
     print(" 🛰    {}".format(s))
+
+
+def warn(s: str):
+    print(" 👾    {}".format(s))

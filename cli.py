@@ -1,7 +1,8 @@
 import terra_sdk
 
-from src.core import get_bluna_for_luna
-from src.helpers import create_params, info, create_terra, create_wallet
+from src.core import get_bluna_for_luna_price, get_luna_for_bluna_price
+from src.helpers import create_params, info, create_terra, create_wallet, warn, from_uluna, get_arg_safe
+from src import bot, const
 
 
 def main():
@@ -24,13 +25,48 @@ def main():
             terra.session.close()
             break
         try:
-            if command == 'supply':
-                supply = get_bluna_for_luna(terra)
-                print(supply)
+            if command == 'price':
+                return_amount, price = get_bluna_for_luna_price(terra, params)
+                info("returned for {} Luna: {} bLuna, price: {}".format(params.amount_luna, from_uluna(return_amount), price))
+                return_amount, price = get_luna_for_bluna_price(terra, params)
+                info("returned for {} bLuna: {} Luna, inv price: {}, price: {}".format(params.amount_bluna, from_uluna(return_amount), 1/price, price))
+            elif command == 'amount-luna':
+                amount_luna = get_arg_safe(args)
+                if amount_luna:
+                    params.amount_luna = float(amount_luna)
+                    info("amount for selling Luna set to {}".format(params.amount_luna))
+            elif command == 'amount-bluna':
+                amount_luna = get_arg_safe(args)
+                if amount_luna:
+                    params.amount_bluna = float(amount_luna)
+                    info("amount for selling bLuna set to {}".format(params.amount_bluna))
+            elif command == 'inv-sell-price':
+                inv_sell_price = get_arg_safe(args)
+                if inv_sell_price:
+                    params.inv_sell_price = float(inv_sell_price)
+                    info("price for selling bLuna set to {}".format(params.inv_sell_price))
+            elif command == 'buy-price':
+                buy_price = get_arg_safe(args)
+                if buy_price:
+                    params.buy_price = float(buy_price)
+                    info("price for buying bLuna set to {}".format(params.buy_price))
+            elif command == 'spread':
+                spread = get_arg_safe(args)
+                if spread:
+                    params.spread = float(spread)
+                    info("max spread set to {}".format(params.spread))
+            elif command == 'bot':
+                bot.run(params, terra)
+            elif command == 'mode-buy':
+                params.mode = const.buy
+                info("set mode to buy ({})".format(params.mode))
+            elif command == 'mode-sell':
+                params.mode = const.sell
+                info("set mode to sell ({})".format(params.mode))
             else:
                 info('Invalid Command.')
         except terra_sdk.exceptions.LCDResponseError as e:
-            print(e)
+            warn(str(e))
 
 
 if __name__ == "__main__":
