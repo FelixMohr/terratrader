@@ -1,0 +1,5 @@
+bluna = "bLuna"
+chain_id = "columbus-5"
+lcd_url = "https://lcd.terra.dev"
+luna_bluna = "terra1jxazgm67et0ce260kvrpfv50acuushpjsz2y0p"
+uluna = "uluna"

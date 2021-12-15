@@ -1,0 +1,34 @@
+{
+  "simulation": {
+    "max_spread": "0.005",
+    "offer_asset": {
+      "info": {
+        "native_token": {
+          "denom": "uluna"
+        }
+      },
+      "amount": "10000000"
+    }}
+}
+
+{
+  "return_amount": "10125252",
+  "spread_amount": "36",
+  "commission_amount": "30467"
+}
+
+
+{
+  "swap": {
+    "max_spread": "0.007",
+    "offer_asset": {
+      "info": {
+        "native_token": {
+          "denom": "uluna"
+        }
+      },
+      "amount": "10000000"
+    },
+    "belief_price": "0.9870715344560022"
+  }
+}
