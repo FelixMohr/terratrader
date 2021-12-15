@@ -21,3 +21,5 @@ bluna_info = {
 buy = 0
 
 sell = 1
+
+log_file = "out.log"

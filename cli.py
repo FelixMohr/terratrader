@@ -1,6 +1,6 @@
 import terra_sdk
 
-from src.core import get_bluna_for_luna_price, get_luna_for_bluna_price
+from src.core import get_bluna_for_luna_price, get_luna_for_bluna_price, buy, sell
 from src.helpers import create_params, info, create_terra, create_wallet, warn, from_uluna, get_arg_safe
 from src import bot, const
 
@@ -56,13 +56,19 @@ def main():
                     params.spread = float(spread)
                     info("max spread set to {}".format(params.spread))
             elif command == 'bot':
-                bot.run(params, terra)
+                bot.run(params, terra, wallet)
             elif command == 'mode-buy':
                 params.mode = const.buy
                 info("set mode to buy ({})".format(params.mode))
             elif command == 'mode-sell':
                 params.mode = const.sell
                 info("set mode to sell ({})".format(params.mode))
+            elif command == 'buy':
+                _, price = get_bluna_for_luna_price(terra, params)
+                buy(params, terra, price, wallet)
+            elif command == 'sell':
+                _, price = get_luna_for_bluna_price(terra, params)
+                sell(params, terra, price, wallet)
             else:
                 info('Invalid Command.')
         except terra_sdk.exceptions.LCDResponseError as e:

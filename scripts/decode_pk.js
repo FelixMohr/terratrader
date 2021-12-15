@@ -24,4 +24,4 @@ const decrypt = (transitmessage, pass) => {
   }
 }
 
-console.log(decrypt('', ''))
+console.log(decrypt(process.argv[0], process.argv[1]))

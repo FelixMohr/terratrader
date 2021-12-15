@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+import datetime
 import terra_sdk.client.lcd
 from src import const
 from src.params import Params
@@ -7,6 +8,7 @@ from terra_sdk.client.lcd import LCDClient, Wallet
 from terra_sdk.key.raw import RawKey
 import os
 import base64
+import time
 
 
 def create_params() -> Params:
@@ -81,9 +83,17 @@ def get_pk() -> str:
     return os.getenv('PK')
 
 
-def info(s: str):
+def info(s: str, do_log=False):
     print(" 🛰    {}".format(s))
+    if do_log:
+        with open(const.log_file, 'a+') as f:
+            s = str(datetime.datetime.now()) + " -- " + s + "\n"
+            f.write(s)
 
 
 def warn(s: str):
     print(" 👾    {}".format(s))
+
+
+def get_system_time_millis() -> int:
+    return round(time.time() * 1000)
