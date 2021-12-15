@@ -5,12 +5,15 @@
 
 <div align="center">
 <img
-    width=300px
+    width=616px
     src="files/moon.jpeg"
     alt="to the moon"
 />
 </div>
+<br />
+<br />
 
+## What it does
 This bot can perform [Terraswap](https://app.terraswap.io) trades for you. 
 
 ## Installation
