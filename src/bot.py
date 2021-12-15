@@ -18,7 +18,7 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
                 check_buy(params, terra, wallet)
             else:
                 check_sell(params, terra, wallet)
-            sleep(max(0, last_timestamp - get_system_time_millis() + params.sleep_time_seconds))
+            sleep(max(0, (last_timestamp - get_system_time_millis()) / 1000.0 + params.sleep_time_seconds))
             last_timestamp = get_system_time_millis()
         except KeyboardInterrupt:
             break
