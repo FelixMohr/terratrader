@@ -14,7 +14,7 @@
 <br />
 
 ## What it does
-This bot can perform [Terraswap](https://app.terraswap.io) trades for you. It trades on the Luna/bLuna pair.
+This bot can perform [Terraswap](https://app.terraswap.io) trades for you. It trades on the [Luna/bLuna](https://finder.extraterrestrial.money/mainnet/address/terra1jxazgm67et0ce260kvrpfv50acuushpjsz2y0p) pair.
 
 ## Installation
 1. Create  virtual environment: `python -m venv venv`
