@@ -5,7 +5,7 @@ from terra_sdk.core import Coins
 from terra_sdk.core.wasm import MsgExecuteContract
 
 from src import const
-from src.helpers import to_uluna, get_buy_dict, get_sell_dict, info, start_halo
+from src.helpers import to_uluna, get_buy_dict, get_sell_dict, info, start_halo, stop_halo
 from src.params import Params
 
 
@@ -13,7 +13,7 @@ def get_bluna_for_luna_price(terra: LCDClient, params: Params):
     spinner = start_halo('Retrieving bluna for luna price', params)
     sent_amount = to_uluna(params.amount_luna)
     result = get_swap_price(sent_amount, terra, const.luna_info)
-    spinner.stop()
+    stop_halo(spinner)
     return result
 
 
@@ -21,7 +21,7 @@ def get_luna_for_bluna_price(terra: LCDClient, params: Params):
     spinner = start_halo('Retrieving bluna for luna price', params)
     sent_amount = to_uluna(params.amount_bluna)
     result = get_swap_price(sent_amount, terra, const.bluna_info)
-    spinner.stop()
+    stop_halo(spinner)
     return result
 
 

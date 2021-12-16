@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import datetime
 import terra_sdk.client.lcd
@@ -55,11 +55,11 @@ def get_sell_dict(belief_price: float, params: Params) -> Dict:
     msg = get_sell_msg(params.spread, belief_price)
     amount = str(to_uluna(params.amount_bluna))
     return {
-      "send": {
-        "amount": amount,
-        "contract": const.luna_bluna,
-        "msg": msg
-      }
+        "send": {
+            "amount": amount,
+            "contract": const.luna_bluna,
+            "msg": msg
+        }
     }
 
 
@@ -101,12 +101,13 @@ def get_system_time_millis() -> int:
     return round(time.time() * 1000)
 
 
-def start_halo(text: str, params: Params, spinner='dots', text_color='magenta') -> Halo:
-    spinner = Halo(text=text, spinner=spinner, text_color=text_color)
+def start_halo(text: str, params: Params, spinner='dots', text_color='magenta') -> Union[Halo | None]:
     if not params.never_log:
+        spinner = Halo(text=text, spinner=spinner, text_color=text_color)
         spinner.start()
-    return spinner
+        return spinner
 
 
-def stop_halo(spinner: Halo):
-    spinner.stop()
+def stop_halo(spinner: Union[Halo | None]):
+    if spinner:
+        spinner.stop()
