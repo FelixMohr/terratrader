@@ -1,25 +1,28 @@
 from typing import Dict
 
-from halo import Halo
 from terra_sdk.client.lcd import LCDClient, Wallet
 from terra_sdk.core import Coins
 from terra_sdk.core.wasm import MsgExecuteContract
 
 from src import const
-from src.helpers import to_uluna, get_buy_dict, get_sell_dict, info
+from src.helpers import to_uluna, get_buy_dict, get_sell_dict, info, start_halo
 from src.params import Params
 
 
-@Halo(text='Retrieving bluna for luna price', spinner='dots', text_color='magenta')
 def get_bluna_for_luna_price(terra: LCDClient, params: Params):
+    spinner = start_halo('Retrieving bluna for luna price', params)
     sent_amount = to_uluna(params.amount_luna)
-    return get_swap_price(sent_amount, terra, const.luna_info)
+    result = get_swap_price(sent_amount, terra, const.luna_info)
+    spinner.stop()
+    return result
 
 
-@Halo(text='Retrieving luna for bluna price', spinner='dots', text_color='magenta')
 def get_luna_for_bluna_price(terra: LCDClient, params: Params):
+    spinner = start_halo('Retrieving bluna for luna price', params)
     sent_amount = to_uluna(params.amount_bluna)
-    return get_swap_price(sent_amount, terra, const.bluna_info)
+    result = get_swap_price(sent_amount, terra, const.bluna_info)
+    spinner.stop()
+    return result
 
 
 def get_swap_price(sent_amount: int, terra: LCDClient, info_dict: Dict):

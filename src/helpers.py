@@ -2,6 +2,8 @@ from typing import List, Dict
 
 import datetime
 import terra_sdk.client.lcd
+from halo import Halo
+
 from src import const
 from src.params import Params
 from terra_sdk.client.lcd import LCDClient, Wallet
@@ -97,3 +99,14 @@ def warn(s: str):
 
 def get_system_time_millis() -> int:
     return round(time.time() * 1000)
+
+
+def start_halo(text: str, params: Params, spinner='dots', text_color='magenta') -> Halo:
+    spinner = Halo(text=text, spinner=spinner, text_color=text_color)
+    if not params.never_log:
+        spinner.start()
+    return spinner
+
+
+def stop_halo(spinner: Halo):
+    spinner.stop()
