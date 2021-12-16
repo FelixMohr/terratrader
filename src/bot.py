@@ -30,7 +30,7 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
 def check_buy(params: Params, terra: LCDClient, wallet: Wallet):
     return_amount, price = get_bluna_for_luna_price(terra, params)
     if price > params.buy_price:
-        info("price {} > {}, not buying".format(price, params.buy_price), params.should_log())
+        info("price {} vs. {}, not buying".format(price, params.buy_price), params.should_log())
         if price - params.buy_price <= 0.001:
             params.sleep_time_seconds = 1
         else:
@@ -45,7 +45,7 @@ def check_sell(params: Params, terra: LCDClient, wallet: Wallet):
     return_amount, price = get_luna_for_bluna_price(terra, params)
     diff = 1 / price - params.inv_sell_price
     if diff < 0:
-        info("price {} < {}, not selling".format(1 / price, params.inv_sell_price), params.should_log())
+        info("price {} vs. {}, not selling".format(1 / price, params.inv_sell_price), params.should_log())
         if abs(diff) <= 0.001:
             params.sleep_time_seconds = 1
         else:
