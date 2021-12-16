@@ -1,4 +1,5 @@
 import terra_sdk
+import sys
 
 from src.core import get_bluna_for_luna_price, get_luna_for_bluna_price, buy, sell
 from src.helpers import create_params, info, create_terra, create_wallet, warn, from_uluna, get_arg_safe
@@ -10,9 +11,7 @@ def main():
         content = f.read()
         print(content)
 
-    params = create_params()
-    terra = create_terra()
-    wallet = create_wallet(terra)
+    params, terra, wallet = setup()
 
     while True:
         inp = input(' 👽    >>> ').strip()
@@ -75,5 +74,17 @@ def main():
             warn(str(e))
 
 
+def setup():
+    params = create_params()
+    terra = create_terra()
+    wallet = create_wallet(terra)
+    return params, terra, wallet
+
+
 if __name__ == "__main__":
-    main()
+    args = sys.argv
+    if len(args) > 1 and args[1] == 'bot':
+        params, terra, wallet = setup()
+        bot.run(params, terra, wallet)
+    else:
+        main()
