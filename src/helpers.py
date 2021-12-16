@@ -84,7 +84,7 @@ def get_pk() -> str:
 
 
 def info(s: str, do_log=False):
-    print(" 🛰    {}".format(s))s
+    print(" 🛰    {}".format(s))
     if do_log:
         with open(const.log_file, 'a+') as f:
             s = str(datetime.datetime.now()) + " -- " + s + "\n"
