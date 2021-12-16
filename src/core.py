@@ -48,5 +48,5 @@ def sell(params: Params, terra: LCDClient, belief_price: float, wallet: Wallet) 
 def execute_contract(exec, terra, wallet, params: Params) -> bool:
     execute_tx = wallet.create_and_sign_tx(msgs=[exec])
     execute_tx_result = terra.tx.broadcast(execute_tx)
-    info(str(execute_tx_result), params.do_log)
+    info(str(execute_tx_result), params.should_log())
     return True

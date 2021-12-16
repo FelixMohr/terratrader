@@ -85,6 +85,8 @@ if __name__ == "__main__":
     args = sys.argv
     if len(args) > 1 and args[1] == 'bot':
         params, terra, wallet = setup()
+        # can't write persistent files in heroku
+        params.never_log = True
         bot.run(params, terra, wallet)
     else:
         main()

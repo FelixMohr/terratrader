@@ -30,14 +30,14 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
 def check_buy(params: Params, terra: LCDClient, wallet: Wallet):
     return_amount, price = get_bluna_for_luna_price(terra, params)
     if price > params.buy_price:
-        info("price {} > {}, not buying".format(price, params.buy_price), params.do_log)
+        info("price {} > {}, not buying".format(price, params.buy_price), params.should_log())
         if price - params.buy_price <= 0.001:
             params.sleep_time_seconds = 1
         else:
             params.sleep_time_seconds = 3
     else:
         buy(params, terra, price, wallet)
-        info("🚀 bought bLuna for {} luna".format(params.amount_luna), params.do_log)
+        info("🚀 bought bLuna for {} luna".format(params.amount_luna), params.should_log())
         params.switch_mode()
 
 
@@ -45,12 +45,12 @@ def check_sell(params: Params, terra: LCDClient, wallet: Wallet):
     return_amount, price = get_luna_for_bluna_price(terra, params)
     diff = 1 / price - params.inv_sell_price
     if diff < 0:
-        info("price {} < {}, not selling".format(1 / price, params.inv_sell_price), params.do_log)
+        info("price {} < {}, not selling".format(1 / price, params.inv_sell_price), params.should_log())
         if abs(diff) <= 0.001:
             params.sleep_time_seconds = 1
         else:
             params.sleep_time_seconds = 3
     else:
         sell(params, terra, price, wallet)
-        info("🚀 sold {} bLuna".format(params.amount_bluna), params.do_log)
+        info("🚀 sold {} bLuna".format(params.amount_bluna), params.should_log())
         params.switch_mode()

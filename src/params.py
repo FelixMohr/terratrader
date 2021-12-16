@@ -12,9 +12,13 @@ class Params(object):
         self.spread = 0.007
         self.sleep_time_seconds = 3
         self.do_log = False
+        self.never_log = False
 
     def set_logging(self, mode: bool):
         self.do_log = mode
+
+    def should_log(self):
+        return self.do_log and not self.never_log
 
     def switch_mode(self):
         self.mode = abs(self.mode - 1)
