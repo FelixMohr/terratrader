@@ -11,6 +11,7 @@ from terra_sdk.key.raw import RawKey
 import os
 import base64
 import time
+import requests
 
 
 def create_params() -> Params:
@@ -18,7 +19,8 @@ def create_params() -> Params:
 
 
 def create_terra() -> LCDClient:
-    client = LCDClient(chain_id=const.chain_id, url=const.lcd_url)
+    prices = requests.get(const.gas_price_url).json()
+    client = LCDClient(chain_id=const.chain_id, url=const.lcd_url, gas_prices=prices, gas_adjustment=1.4)
     info("Connected to " + const.chain_id + " via " + const.lcd_url)
     return client
 
@@ -48,7 +50,7 @@ def from_uluna(uluna: int) -> float:
 def get_sell_msg(max_spread: float, belief_price: float) -> str:
     jsn = '{"swap":{"max_spread":"' + str(max_spread) + '","belief_price":"' + str(belief_price) + '"}}'
     encoded = jsn.encode()
-    return str(base64.b64encode(encoded))
+    return str(base64.b64encode(encoded), "utf-8")
 
 
 def get_sell_dict(belief_price: float, params: Params) -> Dict:

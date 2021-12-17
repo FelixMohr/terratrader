@@ -5,6 +5,8 @@ lcd_url = "https://lcd.terra.dev"
 # luna bLuna pair in terra swap
 luna_bluna = "terra1jxazgm67et0ce260kvrpfv50acuushpjsz2y0p"
 
+bluna_contract = "terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp"
+
 luna_info = {
     "native_token": {
         "denom": "uluna"
@@ -23,3 +25,5 @@ buy = 0
 sell = 1
 
 log_file = "out.log"
+
+gas_price_url = "https://fcd.terra.dev/v1/txs/gas_prices"

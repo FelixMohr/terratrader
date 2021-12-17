@@ -2,6 +2,8 @@ from typing import Dict
 
 from terra_sdk.client.lcd import LCDClient, Wallet
 from terra_sdk.core import Coins
+from terra_sdk.core.auth import StdFee, StdTx
+from terra_sdk.core.broadcast import BlockTxBroadcastResult
 from terra_sdk.core.wasm import MsgExecuteContract
 
 from src import const
@@ -43,13 +45,15 @@ def buy(params: Params, terra: LCDClient, belief_price: float, wallet: Wallet) -
 
 
 def sell(params: Params, terra: LCDClient, belief_price: float, wallet: Wallet) -> bool:
-    msg = MsgExecuteContract(wallet.key.acc_address, const.luna_bluna,
+    msg = MsgExecuteContract(wallet.key.acc_address, const.bluna_contract,
                              get_sell_dict(belief_price, params))
     return execute_contract(msg, terra, wallet, params)
 
 
 def execute_contract(exec, terra, wallet, params: Params) -> bool:
-    execute_tx = wallet.create_and_sign_tx(msgs=[exec])
-    execute_tx_result = terra.tx.broadcast(execute_tx)
+    execute_tx: StdTx = wallet.create_and_sign_tx(msgs=[exec])
+    info(str(execute_tx))
+    fee = StdFee(gas=400000, amount=Coins(uust=300000))
+    execute_tx_result: BlockTxBroadcastResult = terra.tx.broadcast(execute_tx)
     info(str(execute_tx_result), params.should_log())
-    return True
+    return execute_tx_result.code is None

@@ -4,7 +4,7 @@ from terra_sdk.client.lcd import LCDClient, Wallet
 
 from src.core import get_bluna_for_luna_price, buy, get_luna_for_bluna_price, sell
 from src.params import Params
-from src.helpers import info, get_system_time_millis
+from src.helpers import info, get_system_time_millis, warn
 from src import const
 
 
@@ -36,9 +36,12 @@ def check_buy(params: Params, terra: LCDClient, wallet: Wallet):
         else:
             params.sleep_time_seconds = 3
     else:
-        buy(params, terra, price, wallet)
-        info("🚀 bought bLuna for {} luna".format(params.amount_luna), params.should_log())
-        params.switch_mode()
+        result = buy(params, terra, price, wallet)
+        if result:
+            info("🚀 bought bLuna for {} luna".format(params.amount_luna), params.should_log())
+            params.switch_mode()
+        else:
+            warn("error while executing transaction")
 
 
 def check_sell(params: Params, terra: LCDClient, wallet: Wallet):
@@ -51,6 +54,9 @@ def check_sell(params: Params, terra: LCDClient, wallet: Wallet):
         else:
             params.sleep_time_seconds = 3
     else:
-        sell(params, terra, price, wallet)
-        info("🚀 sold {} bLuna".format(params.amount_bluna), params.should_log())
-        params.switch_mode()
+        result = sell(params, terra, price, wallet)
+        if result:
+            info("🚀 sold {} bLuna".format(params.amount_bluna), params.should_log())
+            params.switch_mode()
+        else:
+            warn("error while executing transaction")
