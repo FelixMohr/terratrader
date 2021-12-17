@@ -6,7 +6,7 @@ class Params(object):
     def __init__(self):
         self.amount_luna = 1.0
         self.amount_bluna = 1.0
-        self.inv_sell_price = 0.982
+        self.inv_sell_price = 0.985
         self.buy_price = 0.971
         self.mode = const.sell
         self.spread = 0.007

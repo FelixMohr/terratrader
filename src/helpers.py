@@ -3,6 +3,7 @@ from typing import List, Dict, Union
 import datetime
 import terra_sdk.client.lcd
 from halo import Halo
+from terra_sdk.core import Coins
 
 from src import const
 from src.params import Params
@@ -20,7 +21,10 @@ def create_params() -> Params:
 
 def create_terra() -> LCDClient:
     prices = requests.get(const.gas_price_url).json()
-    client = LCDClient(chain_id=const.chain_id, url=const.lcd_url, gas_prices=prices, gas_adjustment=1.4)
+    uusd = prices["uusd"]
+    coins = Coins(uusd=uusd)
+    client = LCDClient(chain_id=const.chain_id, url=const.lcd_url, gas_prices=coins, gas_adjustment=1.4)
+    print(client.gas_prices)
     info("Connected to " + const.chain_id + " via " + const.lcd_url)
     return client
 
