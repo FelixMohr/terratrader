@@ -2,7 +2,7 @@ import terra_sdk
 import sys
 
 from src.trading_core import get_bluna_for_luna_price, get_luna_for_bluna_price, buy, sell
-from src.helpers import create_params, info, create_terra, create_wallet, warn, from_uluna, get_arg_safe
+from src.helpers import create_params, info, create_terra, create_wallet, warn, from_u_unit, get_arg_safe
 from src import bot, const
 
 
@@ -26,9 +26,9 @@ def main():
         try:
             if command == 'price':
                 return_amount, price = get_bluna_for_luna_price(terra, params)
-                info("returned for {} Luna: {} bLuna, price: {}".format(params.amount_luna, from_uluna(return_amount), price))
+                info("returned for {} Luna: {} bLuna, price: {}".format(params.amount_luna, from_u_unit(return_amount), price))
                 return_amount, price = get_luna_for_bluna_price(terra, params)
-                info("returned for {} bLuna: {} Luna, inv price: {}, price: {}".format(params.amount_bluna, from_uluna(return_amount), 1/price, price))
+                info("returned for {} bLuna: {} Luna, inv price: {}, price: {}".format(params.amount_bluna, from_u_unit(return_amount), 1 / price, price))
             elif command == 'amount-luna':
                 amount_luna = get_arg_safe(args)
                 if amount_luna:

@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Union
 
 import datetime
 import terra_sdk.client.lcd
@@ -10,7 +10,6 @@ from src.params import Params
 from terra_sdk.client.lcd import LCDClient, Wallet
 from terra_sdk.key.raw import RawKey
 import os
-import base64
 import time
 import requests
 
@@ -45,48 +44,12 @@ def get_arg_safe(args: List[str], idx=0) -> str:
     return args[idx]
 
 
-def to_uluna(luna: float) -> int:
+def to_u_unit(luna: float) -> int:
     return round(luna * 1000000)
 
 
-def from_uluna(uluna: int) -> float:
+def from_u_unit(uluna: int) -> float:
     return uluna / 1000000.0
-
-
-def get_sell_msg(max_spread: float, belief_price: float) -> str:
-    jsn = '{"swap":{"max_spread":"' + str(max_spread) + '","belief_price":"' + str(belief_price) + '"}}'
-    encoded = jsn.encode()
-    return str(base64.b64encode(encoded), "utf-8")
-
-
-def get_sell_dict(belief_price: float, params: Params) -> Dict:
-    msg = get_sell_msg(params.spread, belief_price)
-    amount = str(to_uluna(params.amount_bluna))
-    return {
-        "send": {
-            "amount": amount,
-            "contract": const.luna_bluna,
-            "msg": msg
-        }
-    }
-
-
-def get_buy_dict(belief_price: float, params: Params) -> Dict:
-    amount = str(to_uluna(params.amount_luna))
-    return {
-        "swap": {
-            "belief_price": str(belief_price),
-            "max_spread": str(params.spread),
-            "offer_asset": {
-                "amount": amount,
-                "info": {
-                    "native_token": {
-                        "denom": "uluna"
-                    }
-                }
-            }
-        }
-    }
 
 
 def get_pk() -> str:
@@ -107,6 +70,21 @@ def warn(s: str):
 
 def get_system_time_millis() -> int:
     return round(time.time() * 1000)
+
+
+def get_infos_from_url(url: str, keys: List[str]) -> List[str]:
+    response = requests.get(url).json()
+    if not response:
+        warn("could not get json response from {}".format(url))
+        return ["" for _ in range(len(keys))]
+    result = list()
+    for k in keys:
+        if k in response:
+            result.append(response[k])
+        else:
+            result.append("")
+            warn("{} not in result from {}".format(k, url))
+    return result
 
 
 def start_halo(text: str, params: Params, spinner='dots', text_color='magenta') -> Union[Halo | None]:
