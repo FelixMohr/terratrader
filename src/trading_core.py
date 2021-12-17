@@ -7,13 +7,14 @@ from terra_sdk.core.broadcast import BlockTxBroadcastResult
 from terra_sdk.core.wasm import MsgExecuteContract
 
 from src import const
-from src.helpers import to_uluna, get_buy_dict, get_sell_dict, info, start_halo, stop_halo
+from src.helpers import to_u_unit, info, start_halo, stop_halo
+from src.messages import get_sell_dict, get_buy_dict
 from src.params import Params
 
 
 def get_bluna_for_luna_price(terra: LCDClient, params: Params):
     spinner = start_halo('Retrieving bluna for luna price', params)
-    sent_amount = to_uluna(params.amount_luna)
+    sent_amount = to_u_unit(params.amount_luna)
     result = get_swap_price(sent_amount, terra, const.luna_info)
     stop_halo(spinner)
     return result
@@ -21,7 +22,7 @@ def get_bluna_for_luna_price(terra: LCDClient, params: Params):
 
 def get_luna_for_bluna_price(terra: LCDClient, params: Params):
     spinner = start_halo('Retrieving bluna for luna price', params)
-    sent_amount = to_uluna(params.amount_bluna)
+    sent_amount = to_u_unit(params.amount_bluna)
     result = get_swap_price(sent_amount, terra, const.bluna_info)
     stop_halo(spinner)
     return result
@@ -40,7 +41,7 @@ def get_swap_price(sent_amount: int, terra: LCDClient, info_dict: Dict):
 
 def buy(params: Params, terra: LCDClient, belief_price: float, wallet: Wallet) -> bool:
     msg = MsgExecuteContract(wallet.key.acc_address, const.luna_bluna,
-                             get_buy_dict(belief_price, params), Coins(uluna=to_uluna(params.amount_luna)))
+                             get_buy_dict(belief_price, params), Coins(uluna=to_u_unit(params.amount_luna)))
     return execute_contract(msg, terra, wallet, params)
 
 

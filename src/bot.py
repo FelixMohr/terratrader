@@ -3,6 +3,7 @@ from time import sleep
 from terra_sdk.client.lcd import LCDClient, Wallet
 
 from src.trading_core import get_bluna_for_luna_price, buy, get_luna_for_bluna_price, sell
+from src.loans_core import get_loan_uust, get_borrow_limit_uust, execute_repay
 from src.params import Params
 from src.helpers import info, get_system_time_millis, warn
 from src import const
@@ -12,10 +13,16 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
     info("starting bot. send keyboard interrupt to stop")
     params.set_logging(True)
     last_timestamp = get_system_time_millis()
+    last_timestamp_loans = get_system_time_millis()
     while True:
+        seconds_passed_trade = (get_system_time_millis() - last_timestamp) / 1000.0
+        seconds_passed_loans = (get_system_time_millis() - last_timestamp_loans) / 1000.0
         try:
+            if seconds_passed_loans >= params.sleep_time_loans_seconds:
+                check_loans(params, wallet)
+                last_timestamp_loans = get_system_time_millis()
             check_trades(params, terra, wallet)
-            sleep(max(0, (last_timestamp - get_system_time_millis()) / 1000.0 + params.sleep_time_seconds))
+            sleep(max(0, params.sleep_time_seconds - seconds_passed_trade))
             last_timestamp = get_system_time_millis()
         except KeyboardInterrupt:
             break
@@ -64,3 +71,14 @@ def check_sell(params: Params, terra: LCDClient, wallet: Wallet):
             params.switch_mode()
         else:
             warn("error while executing transaction")
+
+
+def check_loans(params, wallet):
+    loan = get_loan_uust(wallet)
+    borrow_limit = get_borrow_limit_uust(wallet)
+    used = loan / borrow_limit
+    if used >= params.repay_ratio:
+        info("used ratio is {}, repaying loan partially.".format(used))
+        execute_repay(wallet, params, loan)
+    else:
+        info("used ratio is {} of {}.".format(used, params.repay_ratio))
