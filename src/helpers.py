@@ -46,7 +46,7 @@ def from_uluna(uluna: int) -> float:
 
 
 def get_sell_msg(max_spread: float, belief_price: float) -> str:
-    jsn = '{"swap":{"max_spread":"{}","belief_price":"{}"}}'.format(max_spread, belief_price)
+    jsn = '{"swap":{"max_spread":"' + str(max_spread) + '","belief_price":"' + str(belief_price) + '"}}'
     encoded = jsn.encode()
     return str(base64.b64encode(encoded))
 
