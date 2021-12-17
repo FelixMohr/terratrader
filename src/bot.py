@@ -2,7 +2,7 @@ from time import sleep
 
 from terra_sdk.client.lcd import LCDClient, Wallet
 
-from src.core import get_bluna_for_luna_price, buy, get_luna_for_bluna_price, sell
+from src.trading_core import get_bluna_for_luna_price, buy, get_luna_for_bluna_price, sell
 from src.params import Params
 from src.helpers import info, get_system_time_millis, warn
 from src import const
@@ -14,10 +14,7 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
     last_timestamp = get_system_time_millis()
     while True:
         try:
-            if params.mode == const.buy:
-                check_buy(params, terra, wallet)
-            else:
-                check_sell(params, terra, wallet)
+            check_trades(params, terra, wallet)
             sleep(max(0, (last_timestamp - get_system_time_millis()) / 1000.0 + params.sleep_time_seconds))
             last_timestamp = get_system_time_millis()
         except KeyboardInterrupt:
@@ -25,6 +22,13 @@ def run(params: Params, terra: LCDClient, wallet: Wallet):
     params.set_logging(False)
     print()
     info("bot was stopped.")
+
+
+def check_trades(params, terra, wallet):
+    if params.mode == const.buy:
+        check_buy(params, terra, wallet)
+    else:
+        check_sell(params, terra, wallet)
 
 
 def check_buy(params: Params, terra: LCDClient, wallet: Wallet):

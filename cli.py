@@ -1,7 +1,7 @@
 import terra_sdk
 import sys
 
-from src.core import get_bluna_for_luna_price, get_luna_for_bluna_price, buy, sell
+from src.trading_core import get_bluna_for_luna_price, get_luna_for_bluna_price, buy, sell
 from src.helpers import create_params, info, create_terra, create_wallet, warn, from_uluna, get_arg_safe
 from src import bot, const
 
