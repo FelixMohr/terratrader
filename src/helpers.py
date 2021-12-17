@@ -15,8 +15,11 @@ import time
 import requests
 
 
-def create_params() -> Params:
-    return Params()
+def create_params(is_bot=False) -> Params:
+    params = Params()
+    if is_bot:
+        params.never_log = True
+    return params
 
 
 def create_terra() -> LCDClient:
