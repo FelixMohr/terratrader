@@ -7,8 +7,8 @@ class Params(object):
         self.amount_luna = 1.0
         self.amount_bluna = 1.0
         self.inv_sell_price = 0.985
-        self.buy_price = 0.971
-        self.mode = const.sell
+        self.buy_price = 0.975
+        self.mode = const.buy
         self.spread = 0.007
         self.sleep_time_seconds = 3
         self.do_log = False

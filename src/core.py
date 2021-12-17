@@ -52,7 +52,7 @@ def sell(params: Params, terra: LCDClient, belief_price: float, wallet: Wallet) 
 
 def execute_contract(exec, terra, wallet, params: Params) -> bool:
     execute_tx: StdTx = wallet.create_and_sign_tx(msgs=[exec])
-    info(str(execute_tx))
     execute_tx_result: BlockTxBroadcastResult = terra.tx.broadcast(execute_tx)
-    info(str(execute_tx_result), params.should_log())
+    info("transaction hash:", params.should_log())
+    info(str(execute_tx_result.txhash), params.should_log())
     return execute_tx_result.code is None

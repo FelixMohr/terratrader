@@ -24,7 +24,6 @@ def create_terra() -> LCDClient:
     uusd = prices["uusd"]
     coins = Coins(uusd=uusd)
     client = LCDClient(chain_id=const.chain_id, url=const.lcd_url, gas_prices=coins, gas_adjustment=1.4)
-    print(client.gas_prices)
     info("Connected to " + const.chain_id + " via " + const.lcd_url)
     return client
 
